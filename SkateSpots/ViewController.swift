@@ -10,7 +10,6 @@ import UIKit
 import MapKit
 
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-    
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var tableView: UITableView!
     
@@ -36,10 +35,15 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         super.viewDidLoad()
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.backgroundColor = .green
+ //       mapView.delegate = self
         let skateImageView = UIImageView(image: UIImage(named: "skatephoto.jpg"))
+        skateImageView.frame = CGRect(x: 47, y: 590, width: self.tableView.frame.width, height: self.tableView.frame.height)
         skateImageView.contentMode = .scaleAspectFit
+        //tableView.addSubview(skateImageView)
         tableView.backgroundView = skateImageView
+        mapView.layer.cornerRadius = 20
+        tableView.isOpaque = false
+        tableView.alpha = 0.7
         zoomMap(location: startLocation)
     }
 
@@ -59,6 +63,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "myCell", for: indexPath)
         cell.textLabel?.text = skateSpots[(indexPath as NSIndexPath).row].title
+        let cellFont = UIFont(name:"Helvetica", size:12)
+        cell.textLabel?.font = cellFont
         return cell
     }
     
@@ -79,5 +85,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         zoomMap(location: loc)
         mapView.addAnnotation(skateSpots[indexPath.row])
     }
+    
+    
 }
 

@@ -62,8 +62,8 @@
 			children = (
 				3299BB56240E876200B48F8A /* AppDelegate.swift */,
 				3299BB58240E876200B48F8A /* SceneDelegate.swift */,
-				3299BB5A240E876200B48F8A /* ViewController.swift */,
 				3299BB8E240F428600B48F8A /* Utilities.swift */,
+				3299BB5A240E876200B48F8A /* ViewController.swift */,
 				3299BB5C240E876200B48F8A /* Main.storyboard */,
 				3299BB6C240E882200B48F8A /* skatephoto.jpg */,
 				3299BB6A240E87E600B48F8A /* Assets.xcassets */,

@@ -22,7 +22,39 @@ class SkateSpot: NSObject, MKAnnotation {
     self.closingTime = closingTime
     self.coordinate = coordinate
   }
+//    init?(json: [String: Any]) {
+//        self.title = json["Name"] as? String
+//        self.address = json["Address"] as? String
+//        self.openingTime = json["Open"] as? String
+//        self.closingTime = json["Close"] as? String
+//      if let latitude = Double(json["Latitiude"] as! String),
+//        let longitude = Double(json["Longitude"] as! String) {
+//      self.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+//      } else {
+//        self.coordinate = CLLocationCoordinate2D()
+//      }
+//    }
   var subtitle: String? {
     return address! + "\n Hours: " + openingTime! + " - " + closingTime!
   }
 }
+
+//extension ViewController: MKMapViewDelegate {
+//  func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+//    guard let annotation = annotation as? SkateSpot else { return nil }
+//    let identifier = "marker"
+//    var view: MKMarkerAnnotationView
+//    if let dequeuedView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+//      as? MKMarkerAnnotationView {
+//      dequeuedView.annotation = annotation
+//      view = dequeuedView
+//    } else {
+//      view = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+//      view.canShowCallout = true
+//      view.calloutOffset = CGPoint(x: -5, y: 5)
+//      view.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+//    }
+//    return view
+//  }
+//}
+
