@@ -33,20 +33,24 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         tableView.dataSource = self
         tableView.delegate = self
- //       mapView.delegate = self
-        let skateImageView = UIImageView(image: UIImage(named: "skatephoto.jpg"))
-        skateImageView.frame = CGRect(x: 47, y: 590, width: self.tableView.frame.width, height: self.tableView.frame.height)
-        skateImageView.contentMode = .scaleAspectFit
-        //tableView.addSubview(skateImageView)
-        tableView.backgroundView = skateImageView
+        
+//        mapView.delegate = self
         mapView.layer.cornerRadius = 20
+
+        let skateImageView = UIImageView(image: UIImage(named: "skatephoto.jpg"))
+        //skateImageView.frame = CGRect(x: 47, y: 590, width: self.tableView.frame.width, height: self.tableView.frame.height)
+        skateImageView.contentMode = .scaleAspectFit
+        tableView.backgroundColor = .clear
+        tableView.backgroundView = skateImageView
         tableView.isOpaque = false
         tableView.alpha = 0.7
+        
         zoomMap(location: startLocation)
     }
-
+    
     func zoomMap(location: CLLocation) {
         let coordinateRegion = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: regionRadius, longitudinalMeters: regionRadius)
         mapView.setRegion(coordinateRegion, animated: true)
@@ -69,7 +73,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     private func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-        cell.backgroundColor = UIColor(white: 1, alpha: 0.2)
+        cell.backgroundColor = .clear
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
