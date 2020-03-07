@@ -33,7 +33,17 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        let sortByName = false
+        if (sortByName) {
+            skateSpots.sort {
+                $0.title! > $1.title!
+            }
+        } else {
+            skateSpots.sort {
+                $0.coordinate.latitude > $1.coordinate.latitude
+            }
+        }
+
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -41,12 +51,12 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         mapView.layer.cornerRadius = 20
 
         let skateImageView = UIImageView(image: UIImage(named: "skatephoto.jpg"))
-        //skateImageView.frame = CGRect(x: 47, y: 590, width: self.tableView.frame.width, height: self.tableView.frame.height)
         skateImageView.contentMode = .scaleAspectFit
+        skateImageView.alpha = 0.7
         tableView.backgroundColor = .clear
         tableView.backgroundView = skateImageView
         tableView.isOpaque = false
-        tableView.alpha = 0.7
+        tableView.alpha = 1.0
         
         zoomMap(location: startLocation)
     }
@@ -67,8 +77,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "myCell", for: indexPath)
         cell.textLabel?.text = skateSpots[(indexPath as NSIndexPath).row].title
-        let cellFont = UIFont(name:"Helvetica", size:12)
+        let cellFont = UIFont(name:"Helvetica-Bold", size:14)
         cell.textLabel?.font = cellFont
+        cell.textLabel?.textColor = .white
         return cell
     }
     
