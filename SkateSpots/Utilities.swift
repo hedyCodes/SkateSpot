@@ -9,6 +9,9 @@
 import Foundation
 import MapKit
 
+let basePath:String = "https://api.darksky.net/forecast/" + dsApiKey + "/"
+let exclusions:String = "?exclude=minutely,daily,hourly,alerts,flags"
+
 class SkateSpot: NSObject, MKAnnotation {
   let title: String?
   let address: String?
@@ -22,18 +25,6 @@ class SkateSpot: NSObject, MKAnnotation {
     self.closingTime = closingTime
     self.coordinate = coordinate
   }
-//    init?(json: [String: Any]) {
-//        self.title = json["Name"] as? String
-//        self.address = json["Address"] as? String
-//        self.openingTime = json["Open"] as? String
-//        self.closingTime = json["Close"] as? String
-//      if let latitude = Double(json["Latitiude"] as! String),
-//        let longitude = Double(json["Longitude"] as! String) {
-//      self.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-//      } else {
-//        self.coordinate = CLLocationCoordinate2D()
-//      }
-//    }
   var subtitle: String? {
     return address! + "\n Hours: " + openingTime! + " - " + closingTime!
   }
@@ -62,4 +53,29 @@ extension ViewController: MKMapViewDelegate {
     return view
   }
 }
+
+class weatherData: NSObject, Decodable {
+    let summary:String
+    let precipitation:Double
+    let windSpeed:Double
+    let apparentTemperature:Double
+    
+    enum SerializationError:Error {
+        case missing(String)
+    }
+    
+    init(json:[String:Any]) throws {
+        guard let summary = json["summary"] as? String else {throw SerializationError.missing("summary is missing")}
+        guard let precip = json["precipProbability"] as? Double else { throw SerializationError.missing("precipication is missing") }
+        guard let windspeed = json["windSpeed"] as? Double else { throw SerializationError.missing("windspeed is missing") }
+        guard let apparenttemperature = json["apparentTemperature"] as? Double else {throw SerializationError.missing("apparent temperature is missing")}
+        
+        self.summary = summary
+        self.precipitation = precip
+        self.windSpeed = windspeed
+        self.apparentTemperature = apparenttemperature
+    }
+
+}
+
 

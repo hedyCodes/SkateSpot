@@ -12,6 +12,8 @@ import MapKit
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var uiLabel: UILabel!
+    @IBOutlet weak var weatherLabel: UILabel!
     
     let regionRadius: CLLocationDistance = 7000
 
@@ -43,11 +45,12 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 $0.coordinate.latitude > $1.coordinate.latitude
             }
         }
+        uiLabel.isUserInteractionEnabled = true
 
         tableView.dataSource = self
         tableView.delegate = self
         
-//        mapView.delegate = self
+//        mapView.delegate = self //leave in for now in case we want to expand on map callout
         mapView.layer.cornerRadius = 20
 
         let skateImageView = UIImageView(image: UIImage(named: "skatephoto.jpg"))
@@ -59,8 +62,49 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         tableView.alpha = 1.0
         
         zoomMap(location: startLocation)
+        
+        print("About to get weather data")
+        let locationString = "\(startLocation.coordinate.latitude),\(startLocation.coordinate.longitude)"
+        weatherLabel.text = "test"
+        getWeather(withLocation: locationString) { (weatherData) in
+            DispatchQueue.main.async {
+                self.weatherLabel.text = String(weatherData.apparentTemperature) + "°"
+            }
+        }
+        print("After get weather data")
     }
     
+    func getWeather (withLocation location:String, completion: @escaping (weatherData) -> ()) {
+            let url = basePath + location + exclusions
+            let request = URLRequest(url: URL(string: url)!)
+            let task = URLSession.shared.dataTask(with: request) { (data:Data?, response:URLResponse?, error:Error?) in
+                if let data = data {
+                    do {
+                        if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String:Any] {
+                            if let currentData = json["currently"] as? [String:Any] {
+                                print("current data")
+                                print(currentData)
+                                if let weatherObj = try? weatherData(json: currentData) {
+                                    completion(weatherObj)
+                                }
+                                for dataPoint in currentData {
+                                    print(dataPoint)
+                                }
+                            }
+                        }
+                    } catch {
+                        print(error.localizedDescription)
+                    }
+                }
+            }
+            task.resume()
+    }
+
+    func handleTap(sender: UITapGestureRecognizer) {
+        if sender.state == .ended {
+            UIApplication.shared.open(URL(string:"https://darksky.net/poweredby/")!)
+        }
+    }
     func zoomMap(location: CLLocation) {
         let coordinateRegion = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: regionRadius, longitudinalMeters: regionRadius)
         mapView.setRegion(coordinateRegion, animated: true)
@@ -72,6 +116,11 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         let location = CLLocationCoordinate2D(latitude: 30.272982, longitude: -97.774968)
         let region: MKCoordinateRegion = MKCoordinateRegion(center: location, latitudinalMeters: diameter, longitudinalMeters: diameter)
         self.mapView.setRegion(region, animated: false)
+    }
+    
+    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+        UIApplication.shared.open(URL)
+        return false
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -98,7 +147,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let loc = CLLocation(latitude: skateSpots[indexPath.row].coordinate.latitude, longitude: skateSpots[indexPath.row].coordinate.longitude)
         zoomMap(location: loc)
-        mapView.addAnnotation(skateSpots[indexPath.row])
+        let selectedSpot = skateSpots[indexPath.row]
+        mapView.addAnnotation(selectedSpot)
+        print(selectedSpot.coordinate.longitude)
     }
     
     
