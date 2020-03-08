@@ -52,7 +52,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
 //        mapView.delegate = self //leave in for now in case we want to expand on map callout
         mapView.layer.cornerRadius = 20
-
+        tableView.layer.cornerRadius = 20
+        
         let skateImageView = UIImageView(image: UIImage(named: "skatephoto.jpg"))
         skateImageView.contentMode = .scaleAspectFit
         skateImageView.alpha = 0.7
@@ -68,7 +69,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         weatherLabel.text = "test"
         getWeather(withLocation: locationString) { (weatherData) in
             DispatchQueue.main.async {
-                self.weatherLabel.text = String(weatherData.apparentTemperature) + "°"
+                self.weatherLabel.text = String(weatherData.apparentTemperature.rounded()) + "°"
             }
         }
         print("After get weather data")
