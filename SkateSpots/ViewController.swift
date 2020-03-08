@@ -50,7 +50,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         tableView.dataSource = self
         tableView.delegate = self
         
-//        mapView.delegate = self //leave in for now in case we want to expand on map callout
         mapView.layer.cornerRadius = 20
         tableView.layer.cornerRadius = 20
         
@@ -64,7 +63,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
         zoomMap(location: startLocation)
         
-        print("About to get weather data")
         let locationString = "\(startLocation.coordinate.latitude),\(startLocation.coordinate.longitude)"
         weatherLabel.text = "test"
         getWeather(withLocation: locationString) { (weatherData) in
@@ -72,7 +70,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                 self.weatherLabel.text = String(weatherData.apparentTemperature.rounded()) + "°"
             }
         }
-        print("After get weather data")
     }
     
     func getWeather (withLocation location:String, completion: @escaping (weatherData) -> ()) {
@@ -87,9 +84,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                                 print(currentData)
                                 if let weatherObj = try? weatherData(json: currentData) {
                                     completion(weatherObj)
-                                }
-                                for dataPoint in currentData {
-                                    print(dataPoint)
                                 }
                             }
                         }
